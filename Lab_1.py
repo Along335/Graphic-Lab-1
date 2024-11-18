@@ -62,17 +62,30 @@ class Figure:
             self.vertices_to_operate = curve_points           
             self.rotate(0)    
  
-    def resize(self, scale_delta):        
+    def resize(self, scale_delta, x_is_axe_to_resize,mouse_resize):        
         scale_factor_local = scale_delta * self.scale_factor 
-        self.resized_vert = [
-            (x * scale_factor_local, y * scale_factor_local) for x, y in self.vertices_to_operate
-        ]
+        if(mouse_resize):
+            self.resized_vert = [
+                (x * scale_factor_local, y * scale_factor_local) for x, y in self.vertices_to_operate                
+            ]            
+        else:
+            if(x_is_axe_to_resize):
+                self.resized_vert = [
+                    (x * scale_factor_local, y) for x, y in self.vertices_to_operate
+                ]
+            else:
+                self.resized_vert = [
+                    (x, y * scale_factor_local) for x, y in self.vertices_to_operate
+                ]
         self.vertices_to_operate = self.resized_vert 
         self.rotate(0) 
 
 class Plane(Figure):
     def __init__(self):        
-        vertices =[(0, 76), (-32, 16), (-76, 16), (-96, -12), (-32, -12), (0, -72), (36, -72), (4, -12), (40, -12), (96, 44), (64, 44), (36, 16), (0, 16), (32, 76),(0,76)]
+        vertices =[
+            (0, 76), (-32, 16), (-76, 16), (-96, -12), (-32, -12), (0, -72), (36, -72),
+            (4, -12), (40, -12), (96, 44), (64, 44), (36, 16), (0, 16), (32, 76),(0,76)
+            ]
         color = (0.992, 0.965, 0.686)
         translate = (-250,0,0)
         draw_type = GL_LINE_STRIP          
@@ -114,7 +127,8 @@ class App:
         self.plane = Plane()
         self.tree = Christmas_tree()
         self.heart = Heart()
-        self.figure_to_perform = None        
+        self.figure_to_perform = None
+        #wself.figure_to_perform = self.plane     
         
         self.main_loop()
 
@@ -162,17 +176,24 @@ class App:
                         self.figure_to_perform.was_curved=True
                         print("Curved")
 
-                    elif event.key == pg.K_z:
-                        self.figure_to_perform.resize(1.1)
-                    elif event.key == pg.K_x:
-                        self.figure_to_perform.resize(0.9)              
+                    elif event.key == pg.K_w:
+                        self.figure_to_perform.resize(1.1,False,False)
+                    elif event.key == pg.K_s:
+                        self.figure_to_perform.resize(0.9,False,False)
+                    elif event.key == pg.K_a:
+                        self.figure_to_perform.resize(1.1,True,False)
+                    elif event.key == pg.K_d:
+                        self.figure_to_perform.resize(0.9,True,False)                 
+                
+                
+                
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if self.figure_to_perform is None:
                         break                     
                     if event.button == 4:  # Scroll up
-                        self.figure_to_perform.resize(1.1)
+                        self.figure_to_perform.resize(1.1,True,True)
                     elif event.button == 5:  # Scroll down
-                        self.figure_to_perform.resize(0.9)
+                        self.figure_to_perform.resize(0.9,True,True)
 
             
             self.plane.draw()
