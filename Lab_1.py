@@ -127,8 +127,7 @@ class App:
         self.plane = Plane()
         self.tree = Christmas_tree()
         self.heart = Heart()
-        self.figure_to_perform = None
-        #wself.figure_to_perform = self.plane     
+        self.figure_to_perform = None           
         
         self.main_loop()
 
@@ -194,7 +193,6 @@ class App:
                         self.figure_to_perform.resize(1.1,True,True)
                     elif event.button == 5:  # Scroll down
                         self.figure_to_perform.resize(0.9,True,True)
-
             
             self.plane.draw()
             self.tree.draw()
@@ -209,8 +207,7 @@ class App:
             self.figure_to_perform = None
         else:
             figure.picked = True
-            self.figure_to_perform = figure
-            print(f"Selected {figure.__class__.__name__}")
+            self.figure_to_perform = figure            
     
     def move(self, axis, value):
         coordinate_list = list(self.figure_to_perform.translate)
